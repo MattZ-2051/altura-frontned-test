@@ -1,10 +1,12 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import { nftContract } from "@/web3/contracts";
-import { useContract, useContractReads, useProvider } from "wagmi";
+import { useContract, useProvider } from "wagmi";
 import { useEffect, useState } from "react";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import NftCard from "@/components/NftCard";
+import { formatTokenUri } from "@/utils";
+import { NftIpfsData } from "@/types/nft";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,14 +16,16 @@ export default function Home() {
     ...nftContract,
     signerOrProvider: provider,
   });
-  const [tokenIds, setTokenIds] = useState<number[]>();
-
+  const [nftData, setNftData] = useState<NftIpfsData>();
   useEffect(() => {
     (async () => {
       const uri = await contract?.tokenURI(BigNumber.from(1));
-      fetch(uri as string).then((res) => console.log("res", res.json()));
+      if (uri) {
+        const ipfsUri = formatTokenUri(uri);
+        fetch(ipfsUri).then(async (res) => setNftData(await res.json()));
+      }
     })();
-  }, []);
+  }, [contract]);
 
   return (
     <>
@@ -33,7 +37,7 @@ export default function Home() {
       </Head>
       <main>
         <div className="flex items-center justify-center w-screen h-screen">
-          <NftCard />
+          {nftData && <NftCard nftData={nftData} />}
         </div>
       </main>
     </>
