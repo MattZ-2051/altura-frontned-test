@@ -1,9 +1,10 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
 import { nftContract } from "@/web3/contracts";
 import { useContract, useContractReads, useProvider } from "wagmi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { BigNumber, ethers } from "ethers";
+import NftCard from "@/components/NftCard";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,10 +14,12 @@ export default function Home() {
     ...nftContract,
     signerOrProvider: provider,
   });
+  const [tokenIds, setTokenIds] = useState<number[]>();
 
   useEffect(() => {
     (async () => {
-      console.log("here", await contract?.name());
+      const uri = await contract?.tokenURI(BigNumber.from(1));
+      fetch(uri as string).then((res) => console.log("res", res.json()));
     })();
   }, []);
 
@@ -28,8 +31,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <h1>App</h1>
+      <main>
+        <div className="flex items-center justify-center w-screen h-screen">
+          <NftCard />
+        </div>
       </main>
     </>
   );
