@@ -1,14 +1,12 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
-import { nftContract } from "@/web3/contracts";
+import { useStore } from "effector-react";
 import { useContract, useProvider } from "wagmi";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BigNumber } from "ethers";
-import NftCard from "@/components/NftCard";
-import { formatTokenUri } from "@/utils";
-import { NftIpfsData } from "@/types/nft";
 
-const inter = Inter({ subsets: ["latin"] });
+import { nftContract } from "@/web3/contracts";
+import NftCard from "@/components/NftCard";
+import { getIpfsDataFx, $nfts } from "@/store/nft";
 
 export default function Home() {
   const provider = useProvider();
@@ -16,21 +14,18 @@ export default function Home() {
     ...nftContract,
     signerOrProvider: provider,
   });
-  const [nftData, setNftData] = useState<NftIpfsData[]>();
-  const [tokenIds, setTokenIds] = useState<number[]>([0, 1, 2, 3]);
+  const nftData = useStore($nfts);
+  const tokenIds = [0, 1, 2, 3];
 
   const fetchTokenData = async () => {
-    const res = await Promise.all(
-      tokenIds.map(async (token) => {
-        const uri = await contract?.tokenURI(BigNumber.from(token));
-        if (uri) {
-          const ipfsUri = formatTokenUri(uri);
-          const res = await fetch(ipfsUri);
-          return await res.json();
-        }
-      })
-    );
-    setNftData(res);
+    if (contract) {
+      const res = await Promise.all(
+        tokenIds.map(async (token): Promise<string> => {
+          return await contract.tokenURI(BigNumber.from(token));
+        })
+      );
+      getIpfsDataFx({ tokenUris: res });
+    }
   };
   useEffect(() => {
     fetchTokenData();
@@ -46,10 +41,11 @@ export default function Home() {
       </Head>
       <main>
         <div className="flex items-center justify-center w-screen h-screen">
-          {nftData &&
-            nftData.map((data, index) => (
-              <NftCard nftData={data} key={index} />
-            ))}
+          {nftData && nftData.length > 0 ? (
+            nftData.map((data, index) => <NftCard nftData={data} key={index} />)
+          ) : (
+            <p>No Nfts to Show</p>
+          )}
         </div>
       </main>
     </>
