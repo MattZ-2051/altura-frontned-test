@@ -5,7 +5,7 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { mainnet } from "wagmi/chains";
 import { configureChains } from "wagmi";
 
-const { chains, provider } = configureChains(
+const { provider } = configureChains(
   [mainnet],
   [alchemyProvider({ apiKey: "QHoh9dK1mXOSm1WwbexcVItxu4SM83ml" })]
 );
