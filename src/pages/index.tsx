@@ -16,16 +16,25 @@ export default function Home() {
     ...nftContract,
     signerOrProvider: provider,
   });
-  const [nftData, setNftData] = useState<NftIpfsData>();
+  const [nftData, setNftData] = useState<NftIpfsData[]>();
+  const [tokenIds, setTokenIds] = useState<number[]>([0, 1, 2, 3]);
+
+  const fetchTokenData = async () => {
+    const res = await Promise.all(
+      tokenIds.map(async (token) => {
+        const uri = await contract?.tokenURI(BigNumber.from(token));
+        if (uri) {
+          const ipfsUri = formatTokenUri(uri);
+          const res = await fetch(ipfsUri);
+          return await res.json();
+        }
+      })
+    );
+    setNftData(res);
+  };
   useEffect(() => {
-    (async () => {
-      const uri = await contract?.tokenURI(BigNumber.from(1));
-      if (uri) {
-        const ipfsUri = formatTokenUri(uri);
-        fetch(ipfsUri).then(async (res) => setNftData(await res.json()));
-      }
-    })();
-  }, [contract]);
+    fetchTokenData();
+  }, []);
 
   return (
     <>
@@ -37,7 +46,10 @@ export default function Home() {
       </Head>
       <main>
         <div className="flex items-center justify-center w-screen h-screen">
-          {nftData && <NftCard nftData={nftData} />}
+          {nftData &&
+            nftData.map((data, index) => (
+              <NftCard nftData={data} key={index} />
+            ))}
         </div>
       </main>
     </>
