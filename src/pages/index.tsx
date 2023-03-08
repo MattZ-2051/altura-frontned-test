@@ -40,12 +40,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="flex items-center justify-center w-screen h-screen">
-          {nftData && nftData.length > 0 ? (
-            nftData.map((data, index) => <NftCard nftData={data} key={index} />)
-          ) : (
-            <p>No Nfts to Show</p>
-          )}
+        <div className="relative flex items-center justify-center w-full h-full p-12 scroll-smooth">
+          <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3">
+            {nftData && nftData.length > 0 ? (
+              nftData.map((data, index) => (
+                <NftCard nftData={data} key={index} />
+              ))
+            ) : (
+              <p>No Nfts to Show</p>
+            )}
+          </div>
         </div>
       </main>
     </>
