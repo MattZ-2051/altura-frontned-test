@@ -4,6 +4,7 @@ import { NftIpfsData } from "@/types/nft";
 import { formatTokenUri } from "@/utils";
 import Modal from "@/components/Modal";
 import Accordian from "@/components/Accordian";
+import Button from "../Button";
 
 interface IProps {
   nftData: NftIpfsData;
@@ -31,7 +32,7 @@ const NftCard = ({ nftData }: IProps) => {
         </div>
       </div>
       <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
-        <div className="flex flex-col w-full h-full overflow-auto">
+        <div className="flex flex-col justify-between w-full h-full overflow-auto">
           <h1 className="mt-8 text-3xl text-center">{nftData.name} Details</h1>
           <div className="mt-8">
             <Accordian
@@ -39,6 +40,13 @@ const NftCard = ({ nftData }: IProps) => {
                 { title: "Description", body: nftData.description },
                 { title: "Attributes", body: nftData.attributes },
               ]}
+            />
+          </div>
+          <div className="flex justify-center w-full mt-8">
+            <Button
+              label="See on Opensea"
+              classes="!h-[60px] !w-[224px]"
+              to="https://opensea.io/"
             />
           </div>
         </div>
