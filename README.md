@@ -14,6 +14,10 @@ Format
 Lint
 `npm run lint`
 
+## Vercel Domain
+
+https://altura-frontned-test.vercel.app/
+
 ## File Structure
 
 📦src
