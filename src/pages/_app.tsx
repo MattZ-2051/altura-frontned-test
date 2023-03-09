@@ -5,10 +5,8 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { mainnet } from "wagmi/chains";
 import { configureChains } from "wagmi";
 
-const { provider } = configureChains(
-  [mainnet],
-  [alchemyProvider({ apiKey: "QHoh9dK1mXOSm1WwbexcVItxu4SM83ml" })]
-);
+const apiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
+const { provider } = configureChains([mainnet], [alchemyProvider({ apiKey })]);
 
 const client = createClient({
   autoConnect: true,

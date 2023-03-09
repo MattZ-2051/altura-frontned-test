@@ -3,7 +3,7 @@ import { createStore, createEvent, createEffect } from "effector";
 import { getIpfsData } from "@/api/nft";
 import { NftData } from "@/types/nft";
 
-export const getNftData = createEffect<
+export const getNftDataFx = createEffect<
   { tokenUri: string; owner: string; tokenId: number }[],
   NftData[]
 >(async (tokenData) => {
@@ -15,11 +15,11 @@ export const getNftData = createEffect<
   );
 });
 
-getNftData.doneData.watch((res) => {
+getNftDataFx.doneData.watch((res) => {
   updateNftData(res);
 });
 
-getNftData.failData.watch(() => {
+getNftDataFx.failData.watch(() => {
   updateNftData(null);
 });
 

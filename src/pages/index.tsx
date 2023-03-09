@@ -6,7 +6,7 @@ import { BigNumber } from "ethers";
 
 import { nftContract } from "@/web3/contracts";
 import NftCard from "@/components/NftCard";
-import { $nfts, getNftData } from "@/store/nft";
+import { $nfts, getNftDataFx } from "@/store/nft";
 
 export default function Home() {
   const provider = useProvider();
@@ -30,7 +30,7 @@ export default function Home() {
           }
         )
       );
-      getNftData(result);
+      getNftDataFx(result);
     }
   };
   useEffect(() => {
