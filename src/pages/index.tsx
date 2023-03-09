@@ -37,6 +37,8 @@ export default function Home() {
     fetchTokenData();
   }, []);
 
+  console.log("nftData", nftData);
+
   return (
     <>
       <Head>
