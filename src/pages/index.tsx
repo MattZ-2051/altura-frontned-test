@@ -6,7 +6,7 @@ import { BigNumber } from "ethers";
 
 import { nftContract } from "@/web3/contracts";
 import NftCard from "@/components/NftCard";
-import { getIpfsDataFx, $nfts } from "@/store/nft";
+import { $nfts, getNftData } from "@/store/nft";
 
 export default function Home() {
   const provider = useProvider();
@@ -19,12 +19,18 @@ export default function Home() {
 
   const fetchTokenData = async () => {
     if (contract) {
-      const res = await Promise.all(
-        tokenIds.map(async (token): Promise<string> => {
-          return await contract.tokenURI(BigNumber.from(token));
-        })
+      const result = await Promise.all(
+        tokenIds.map(
+          async (
+            token
+          ): Promise<{ tokenUri: string; owner: string; tokenId: number }> => {
+            const tokenUri = await contract.tokenURI(BigNumber.from(token));
+            const owner = await contract.ownerOf(BigNumber.from(token));
+            return { tokenUri, owner, tokenId: token };
+          }
+        )
       );
-      getIpfsDataFx({ tokenUris: res });
+      getNftData(result);
     }
   };
   useEffect(() => {

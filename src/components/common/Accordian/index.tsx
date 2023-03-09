@@ -33,7 +33,10 @@ const Accordian = ({ data }: IProps) => {
             {textIndex === index &&
               (body instanceof Array ? (
                 body.map((attribute) => (
-                  <div key={attribute.trait_type}>
+                  <div
+                    key={attribute.trait_type}
+                    className="transition-all duration-1000 ease-in-out"
+                  >
                     <div className="flex justify-between">
                       <p>Trait Type</p>
                       <p>{attribute.trait_type}</p>
@@ -49,7 +52,7 @@ const Accordian = ({ data }: IProps) => {
                   </div>
                 ))
               ) : (
-                <p>{body}</p>
+                <p className="whitespace-normal">{body}</p>
               ))}
           </div>
         </div>
