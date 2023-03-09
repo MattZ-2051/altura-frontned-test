@@ -6,7 +6,7 @@ import { BigNumber } from "ethers";
 
 import { nftContract } from "@/web3/contracts";
 import NftCard from "@/components/NftCard";
-import { getIpfsDataFx, $nfts } from "@/store/nft";
+import { $nfts, getNftData } from "@/store/nft";
 
 export default function Home() {
   const provider = useProvider();
@@ -19,12 +19,18 @@ export default function Home() {
 
   const fetchTokenData = async () => {
     if (contract) {
-      const res = await Promise.all(
-        tokenIds.map(async (token): Promise<string> => {
-          return await contract.tokenURI(BigNumber.from(token));
-        })
+      const result = await Promise.all(
+        tokenIds.map(
+          async (
+            token
+          ): Promise<{ tokenUri: string; owner: string; tokenId: number }> => {
+            const tokenUri = await contract.tokenURI(BigNumber.from(token));
+            const owner = await contract.ownerOf(BigNumber.from(token));
+            return { tokenUri, owner, tokenId: token };
+          }
+        )
       );
-      getIpfsDataFx({ tokenUris: res });
+      getNftData(result);
     }
   };
   useEffect(() => {
@@ -42,12 +48,24 @@ export default function Home() {
       <main>
         <div className="relative flex items-center justify-center w-full h-full p-12 scroll-smooth">
           <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3">
-            {nftData && nftData.length > 0 ? (
-              nftData.map((data, index) => (
-                <NftCard nftData={data} key={index} />
-              ))
+            {nftData ? (
+              nftData.length > 0 ? (
+                nftData.map((data, index) => (
+                  <NftCard nftData={data} key={index} />
+                ))
+              ) : (
+                <div className="flex items-center justify-center w-full h-[50vh] col-span-3">
+                  <h1 className="text-5xl text-center text-white">
+                    Loading...
+                  </h1>
+                </div>
+              )
             ) : (
-              <p>No Nfts to Show</p>
+              <div className="flex items-center justify-center w-full h-[50vh] col-span-3">
+                <h1 className="w-full text-5xl text-center text-white">
+                  Oops, Something went wrong. Please reload the page
+                </h1>
+              </div>
             )}
           </div>
         </div>

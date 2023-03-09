@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { useState } from "react";
-import { NftIpfsData } from "@/types/nft";
+import { NftData } from "@/types/nft";
 import { formatTokenUri } from "@/utils";
 import Modal from "@/components/common/Modal";
 import Accordian from "@/components/common/Accordian";
 import Button from "../common/Button";
 
 interface IProps {
-  nftData: NftIpfsData;
+  nftData: NftData;
 }
 
 const NftCard = ({ nftData }: IProps) => {
@@ -19,14 +19,14 @@ const NftCard = ({ nftData }: IProps) => {
     >
       <div className="bg-[#3B3B3B] w-full h-full rounded-3xl">
         <Image
-          src={formatTokenUri(nftData.image)}
+          src={formatTokenUri(nftData.ipfsData.image)}
           alt=""
           width={330}
           height={295}
           className="rounded-t-3xl"
         />
         <div className="p-8">
-          <p className="text-2xl text-white">{nftData.name}</p>
+          <p className="text-2xl text-white">{nftData.ipfsData.name}</p>
         </div>
       </div>
       {isModalOpen && (
@@ -35,13 +35,23 @@ const NftCard = ({ nftData }: IProps) => {
             <Modal setIsOpen={setIsModalOpen}>
               <div className="flex flex-col justify-between w-full h-full overflow-auto">
                 <h1 className="mt-8 text-3xl text-center">
-                  {nftData.name} Details
+                  {nftData.ipfsData.name} Details
                 </h1>
                 <div className="mt-8">
                   <Accordian
                     data={[
-                      { title: "Description", body: nftData.description },
-                      { title: "Attributes", body: nftData.attributes },
+                      {
+                        title: "Description",
+                        body: nftData.ipfsData.description,
+                      },
+                      {
+                        title: "Attributes",
+                        body: nftData.ipfsData.attributes,
+                      },
+                      {
+                        title: "Owner",
+                        body: nftData.owner,
+                      },
                     ]}
                   />
                 </div>
@@ -49,7 +59,7 @@ const NftCard = ({ nftData }: IProps) => {
                   <Button
                     label="See on Opensea"
                     classes="!h-[60px] !w-[224px]"
-                    to="https://opensea.io/"
+                    to={`https://opensea.io/assets/ethereum/0x8a90cab2b38dba80c64b7734e58ee1db38b8992e/${nftData.tokenId}`}
                   />
                 </div>
               </div>

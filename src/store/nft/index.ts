@@ -1,26 +1,30 @@
 import { createStore, createEvent, createEffect } from "effector";
 
 import { getIpfsData } from "@/api/nft";
-import { NftIpfsData } from "@/types/nft";
+import { NftData } from "@/types/nft";
 
-export const getIpfsDataFx = createEffect<
-  { tokenUris: string[] },
-  NftIpfsData[]
->(async ({ tokenUris }) => {
+export const getNftData = createEffect<
+  { tokenUri: string; owner: string; tokenId: number }[],
+  NftData[]
+>(async (tokenData) => {
   return await Promise.all(
-    tokenUris.map(async (uri) => {
-      const res = await getIpfsData(uri);
-      return res.data;
+    tokenData.map(async ({ tokenUri, owner, tokenId }) => {
+      const res = await getIpfsData(tokenUri);
+      return { ipfsData: res.data, owner, tokenId };
     })
   );
 });
 
-getIpfsDataFx.doneData.watch((res) => {
+getNftData.doneData.watch((res) => {
   updateNftData(res);
 });
 
-const updateNftData = createEvent<NftIpfsData[]>();
-export const $nfts = createStore<NftIpfsData[]>([]).on(
+getNftData.failData.watch(() => {
+  updateNftData(null);
+});
+
+const updateNftData = createEvent<NftData[] | null>();
+export const $nfts = createStore<NftData[] | null>([]).on(
   updateNftData,
   (prevState, payload) => payload
 );
