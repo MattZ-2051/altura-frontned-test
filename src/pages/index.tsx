@@ -15,7 +15,7 @@ export default function Home() {
     signerOrProvider: provider,
   });
   const nftData = useStore($nfts);
-  const tokenIds = [0, 1, 2, 3];
+  const tokenIds = [0, 1, 2, 3, 4, 5];
 
   const fetchTokenData = async () => {
     if (contract) {
