@@ -4,7 +4,7 @@ import { NftData } from "@/types/nft";
 import { formatTokenUri } from "@/utils";
 import Modal from "@/components/common/Modal";
 import Accordian from "@/components/common/Accordian";
-import Button from "../common/Button";
+import Button from "@/components/common/Button";
 
 interface IProps {
   nftData: NftData;

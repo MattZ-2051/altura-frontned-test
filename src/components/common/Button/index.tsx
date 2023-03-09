@@ -11,7 +11,7 @@ const Button = ({ label, classes, to }: IProps) => {
           href={to}
           target="_blank"
           rel="noreferrer"
-          className={`bg-primary  w-56 h-16 rounded-xl text-white ${classes} hover:cursor-pointer hover:bg-opacity-80`}
+          className={`block bg-primary  w-56 h-16 rounded-xl text-white ${classes} hover:cursor-pointer hover:bg-opacity-80`}
         >
           <div className="flex items-center justify-center w-full h-full">
             {label}
