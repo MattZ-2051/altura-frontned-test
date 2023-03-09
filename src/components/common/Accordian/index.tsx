@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AccordianData } from "./types";
-import { XCircleIcon } from "@heroicons/react/24/outline";
+import { XCircleIcon, ArrowDownIcon } from "@heroicons/react/24/outline";
 
 interface IProps {
   data: AccordianData;
@@ -23,10 +23,19 @@ const Accordian = ({ data }: IProps) => {
               onClick={() => setTextIndex(null)}
             />
           )}
-          <div className="w-full h-full" onClick={() => setTextIndex(index)}>
+          <div
+            className="flex items-center justify-between w-full h-full"
+            onClick={() => setTextIndex(index)}
+          >
             <h2>
               <p className="px-5 py-4 text-base text-left">{title}</p>
             </h2>
+            {textIndex !== index && (
+              <ArrowDownIcon
+                className="w-4 h-4 mr-4 right-4 top-4 hover:scale-110 hover:cursor-pointer"
+                onClick={() => setTextIndex(index)}
+              />
+            )}
           </div>
 
           <div className="px-5 py-4">
